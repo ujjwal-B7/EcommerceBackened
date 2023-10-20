@@ -3,6 +3,11 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const connectDatabase = require("./config/database");
 
+// Add the unhandledRejection handler
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 // config
 dotenv.config({ path: "backend/config/config.env" });
 
