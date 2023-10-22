@@ -6,7 +6,8 @@ const connectDatabase = async () => {
       useNewUrlParser: true,
     });
     // console.log("Mongodb connected succesfully");
-  } catch (err) {
+  } 
+  catch (err) {
     console.error(err);
   }
 };
