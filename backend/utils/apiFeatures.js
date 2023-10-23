@@ -30,7 +30,11 @@ class ApiFeatures {
     removeFields.forEach((key) => delete copyQuery[key]);
 
     //filter for price range
-    this.query = this.query.find(copyQuery);
+    console.log(copyQuery);
+    let queryStr = JSON.stringify(copyQuery);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`);
+    this.query = this.query.find(JSON.parse(queryStr));
+    console.log(queryStr);
     return this;
   }
 }
