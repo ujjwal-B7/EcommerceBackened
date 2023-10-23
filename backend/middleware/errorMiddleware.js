@@ -7,10 +7,9 @@ module.exports = (err, req, res, next) => {
 
   // wrong mongodb id error
   if ((err.name = "CASTERROR")) {
-    const message = `Resource not found.Invalid: ${err.path}`;
-    err = new ErrorHandler(message, 400);
+    err = new ErrorHandler(`Resource not found.Invalid: ${err.path}`, 400);
   }
-  
+
   res.status(err.statusCode).json({
     success: false,
     error: err.message,
