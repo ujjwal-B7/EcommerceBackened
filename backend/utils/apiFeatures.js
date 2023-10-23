@@ -23,6 +23,15 @@ class ApiFeatures {
   }
 
   // filtering the products
-  
+  filter() {
+    const copyQuery = { ...this.queryStr };
+    //removing keyword because it is part of search function above
+    const removeFields = ["keyword", "page", "limit"];
+    removeFields.forEach((key) => delete copyQuery[key]);
+
+    //filter for price range
+    this.query = this.query.find(copyQuery);
+    return this;
+  }
 }
 module.exports = ApiFeatures;
