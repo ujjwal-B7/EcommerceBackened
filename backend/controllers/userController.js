@@ -14,5 +14,6 @@ exports.registerUser = catchErrors(async (req, res, next) => {
       url: "profileUrl",
     },
   });
-  res.status(201).json({ success: true, user });
+  const token = user.getJwtToken();
+  res.status(201).json({ success: true, token });
 });

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
   name: {
@@ -39,12 +40,18 @@ const userSchema = new Schema({
 });
 
 // hashing the password before saving in database
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
   this.password = await bcryptjs.hash(this.password, 10);
 });
 
+// JWT token....generating token and storing in cookie
+userSchema.methods.getJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+};
 
 module.exports = mongoose.model("User", userSchema);
