@@ -54,4 +54,9 @@ userSchema.methods.getJwtToken = function () {
   });
 };
 
+// comparing password
+userSchema.methods.comparePassword = function (userPassword) {
+  return  bcryptjs.compare(userPassword, this.password);
+};
+
 module.exports = mongoose.model("User", userSchema);
