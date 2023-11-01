@@ -15,7 +15,7 @@ exports.registerUser = catchErrors(async (req, res, next) => {
       url: "profileUrl",
     },
   });
-  token(user, 201,res);
+  token(user, 201, res);
   // const token = user.getJwtToken();
   // res.status(201).json({ success: true, token });
 });
@@ -36,7 +36,19 @@ exports.loginUser = catchErrors(async (req, res, next) => {
   if (!matchPassword) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
-  token(user, 200,res);
+  token(user, 200, res);
   // const token = user.getJwtToken();
   // res.status(200).json({ success: true, user, token });
+});
+
+// user logout
+exports.logoutUser = catchErrors(async (req, res, next) => {
+  res.cookie("token", null, {
+    expiresIn: new Date(Date.now()),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfully.",
+  });
 });
