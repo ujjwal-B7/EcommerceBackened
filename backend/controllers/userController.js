@@ -2,6 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchErrors = require("../middleware/catchErrors");
 const User = require("../model/userModel");
 const { token } = require("../utils/jwtToken");
+const { sendEmail } = require("../utils/sendEmail");
 
 // user register
 exports.registerUser = catchErrors(async (req, res, next) => {
@@ -51,4 +52,34 @@ exports.logoutUser = catchErrors(async (req, res, next) => {
     success: true,
     message: "Logged out successfully.",
   });
+});
+
+// forgot password
+exports.forgotPassword = catchErrors(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+  const resetPasswordUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/v1/password/reset/${resetToken}`;
+  const message = `Your password reset link is:\n ${resetPasswordUrl} \n If you have not requested this link please ignore it.`;
+  // try {
+  await sendEmail({
+    email: user.email,
+    subject: "Password Recovery link",
+    message,
+  });
+  res.status(200).json({
+    success: true,
+    message: `Reset link sent successfully to ${user.email}`,
+  });
+  // } catch (error) {
+  //   user.resetPasswordToken = undefined;
+  //   user.resetPasswordTokenExpire = undefined;
+  //   await user.save({ validateBeforeSave: false });
+  //   return new ErrorHandler(error.message, 500);
+  // }
 });
