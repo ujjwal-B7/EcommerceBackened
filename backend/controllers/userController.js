@@ -125,3 +125,22 @@ exports.getUserDetail = catchErrors(async (req, res, next) => {
     user,
   });
 });
+// update user password
+exports.updatePassword = catchErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+  const matchPassword = await user.comparePassword(req.body.oldPassword);
+  if (!matchPassword) {
+    return next(new ErrorHandler("Old password is invalid", 400));
+  }
+
+  if (req.body.newPassword !== req.body.confirmPassword) {
+    return next(new ErrorHandler("Password doesnt match", 400));
+  }
+  user.password = req.body.newPassword;
+  await user.save();
+  token(user, 200, res);
+  // res.status(200).json({
+  //   success: true,
+  //   user,
+  // });
+});
