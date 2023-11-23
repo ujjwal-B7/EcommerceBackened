@@ -12,8 +12,21 @@ module.exports = (err, req, res, next) => {
 
   // mongoose duplicate key error
   if (err.message && err.message.includes("duplicate key error")) {
+    // extracts the duplicate key field from the error message using a regular expression
     const duplicateKeyField = err.message.match(/index: ([^_]+)_/)[1];
-    const message = `Duplicate ${duplicateKeyField} Email is already registered.`;
+    const message = `Duplicate ${duplicateKeyField}: Email is already registered.`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  // wrong jwt error
+  if (err.name === "JsonWebTokenError") {
+    const message = `Json web token is invalid.`;
+    err = new ErrorHandler(message, 400);
+  }
+
+  //  jwt expire error
+  if (err.name === "TokenExpiredError") {
+    const message = `Json web token is expired.`;
     err = new ErrorHandler(message, 400);
   }
 
