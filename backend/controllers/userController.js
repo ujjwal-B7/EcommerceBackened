@@ -144,3 +144,23 @@ exports.updatePassword = catchErrors(async (req, res, next) => {
   //   user,
   // });
 });
+
+// update user profile
+exports.updateProfile = catchErrors(async (req, res, next) => {
+  console.log(req.body.name);
+  console.log(req.body.email);
+  const updatedUserData = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+  // image updating will be done later
+  const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
