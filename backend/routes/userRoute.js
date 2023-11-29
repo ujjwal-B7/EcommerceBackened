@@ -17,4 +17,10 @@ router.get(
   authorizedRoles("admin"),
   userController.getAllUsers
 );
+router.get(
+  "/admin/getSingleUserByAdmin/:id",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  userController.getSingleUserByAdmin
+);
 module.exports = router;

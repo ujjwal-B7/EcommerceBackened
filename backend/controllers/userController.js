@@ -165,8 +165,21 @@ exports.updateProfile = catchErrors(async (req, res, next) => {
   });
 });
 
+// get all users by admin
 exports.getAllUsers = catchErrors(async (req, res, next) => {
-  const user = await User.find();
+  const users = await User.find();
+  res.status(200).json({
+    success: true,
+    users,
+  });
+});
+
+// get single user by admin
+exports.getSingleUserByAdmin = catchErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  // if (!user) {
+  //   return next(new Error("No user matches the given id", 400));
+  // }
   res.status(200).json({
     success: true,
     user,
