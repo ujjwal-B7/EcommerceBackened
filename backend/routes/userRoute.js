@@ -10,5 +10,11 @@ router.put("/resetPassword/:token", userController.resetPassword);
 router.put("/updatePassword", authenticatedUser, userController.updatePassword);
 router.put("/updateProfile", authenticatedUser, userController.updateProfile);
 router.post("/logoutUser", userController.logoutUser);
-router.get("/users", authenticatedUser, userController.getUserDetail);
+router.get("/user", authenticatedUser, userController.getUserDetail);
+router.get(
+  "/admin/getAllUsers",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  userController.getAllUsers
+);
 module.exports = router;
