@@ -177,11 +177,18 @@ exports.getAllUsers = catchErrors(async (req, res, next) => {
 // get single user by admin
 exports.getSingleUserByAdmin = catchErrors(async (req, res, next) => {
   const user = await User.findById(req.params.id);
-  // if (!user) {
-  //   return next(new Error("No user matches the given id", 400));
-  // }
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+//  delete user by admin
+exports.deleteUser = catchErrors(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+  const result = await user.deleteOne();
+  res.status(201).json({
+    success: true,
+    result,
   });
 });

@@ -23,4 +23,10 @@ router.get(
   authorizedRoles("admin"),
   userController.getSingleUserByAdmin
 );
+router.get(
+  "/admin/deleteUser/:id",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  userController.deleteUser
+);
 module.exports = router;

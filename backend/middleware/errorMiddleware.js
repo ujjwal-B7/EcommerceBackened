@@ -6,8 +6,8 @@ module.exports = (err, req, res, next) => {
   err.message = err.message || "Internal Server Error";
 
   // wrong mongodb id error
-  if (err.name === "CASTERROR") {
-    err = new ErrorHandler(`${err.message}`, 400);
+  if (err.message && err.message.includes("CastError")) {
+    err = new ErrorHandler(`Resource not found : ${err.path}`, 404);
   }
 
   // mongoose duplicate key error
