@@ -37,4 +37,9 @@ router
     productController.deleteProduct
   );
 
+router.put(
+  "/products/review",
+  authenticatedUser,
+  productController.createProductReview
+);
 module.exports = router;
