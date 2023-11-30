@@ -23,6 +23,12 @@ router.get(
   authorizedRoles("admin"),
   userController.getSingleUserByAdmin
 );
+router.put(
+  "/admin/updateUserRole/:id",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  userController.updateUserRole
+);
 router.get(
   "/admin/deleteUser/:id",
   authenticatedUser,
