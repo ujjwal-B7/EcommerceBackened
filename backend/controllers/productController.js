@@ -108,3 +108,32 @@ exports.getAllProductsReview = catchErrors(async (req, res, next) => {
     reviews: product.reviews,
   });
 });
+
+// delete products reviews
+exports.deleteProductsReview = catchErrors(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+  const reviews = product.reviews.filter(
+    (review) => review.name !== req.user.name
+  );
+  let avg = 0;
+  reviews.forEach((rev) => {
+    avg += rev.rating;
+  });
+  const ratings = avg / reviews.length;
+  const numOfReviews = reviews.length;
+  const updatedReview = {
+    ratings: ratings,
+    numOfReviews: numOfReviews,
+    reviews: reviews,
+  };
+  await Product.findByIdAndUpdate(req.params.id, updatedReview, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+  await res.status(200).json({
+    success: true,
+    message: "Review deleted successfully.",
+    reviews,
+  });
+});

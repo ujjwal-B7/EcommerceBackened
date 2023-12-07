@@ -42,9 +42,10 @@ router.put(
   authenticatedUser,
   productController.createProductReview
 );
-router.get(
-  "/products/review/:id",
+router.get("/products/review/:id", productController.getAllProductsReview);
+router.delete(
+  "/products/review/delete/:id",
   authenticatedUser,
-  productController.getAllProductsReview
+  productController.deleteProductsReview
 );
 module.exports = router;
