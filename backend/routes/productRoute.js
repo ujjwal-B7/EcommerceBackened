@@ -42,4 +42,9 @@ router.put(
   authenticatedUser,
   productController.createProductReview
 );
+router.get(
+  "/products/review/:id",
+  authenticatedUser,
+  productController.getAllProductsReview
+);
 module.exports = router;

@@ -96,3 +96,15 @@ exports.createProductReview = catchErrors(async (req, res, next) => {
     success: true,
   });
 });
+
+// get all produt reviews
+exports.getAllProductsReview = catchErrors(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new ErrorHandler("Product not found.", 404));
+  }
+  res.status(200).json({
+    success: true,
+    reviews: product.reviews,
+  });
+});

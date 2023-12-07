@@ -1,5 +1,6 @@
 const nodeMailer = require("nodemailer");
 exports.sendEmail = async (options) => {
+  // createTransport creates a transport object for communicating channel with email server
   const transporter = nodeMailer.createTransport({
     // host: process.env.HOST,
     // port: process.env.SMTP_PORT,
