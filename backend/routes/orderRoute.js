@@ -6,12 +6,6 @@ const { authenticatedUser, authorizedRoles } = require("../middleware/auth");
 router.post("/order/new", authenticatedUser, orderController.createOrder);
 router
   .route("/admin/order/:id")
-  .get(
-    // "/order/:id",
-    authenticatedUser,
-    authorizedRoles("admin"),
-    orderController.getSingleOrder
-  )
   .put(
     authenticatedUser,
     authorizedRoles("admin"),
@@ -28,6 +22,7 @@ router.get(
   authorizedRoles("admin"),
   orderController.getTotalOrdersByAdmin
 );
+router.get("/order/:id", authenticatedUser, orderController.getSingleOrder);
 router.get(
   "/orders/myOrders",
   authenticatedUser,

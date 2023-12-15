@@ -57,7 +57,7 @@ exports.createOrder = catchErrors(async (req, res, next) => {
   });
 });
 
-// get single order by admin to know how many users ordered the same product
+// get single order 
 exports.getSingleOrder = catchErrors(async (req, res, next) => {
   const singleOrder = await Order.findById(req.params.id).populate(
     "user",
