@@ -57,7 +57,7 @@ exports.createOrder = catchErrors(async (req, res, next) => {
   });
 });
 
-// get single order 
+// get single order
 exports.getSingleOrder = catchErrors(async (req, res, next) => {
   const singleOrder = await Order.findById(req.params.id).populate(
     "user",
@@ -111,7 +111,7 @@ exports.updateOrderStatus = catchErrors(async (req, res, next) => {
   if (req.body.orderStatus === "Delivered") {
     order.deliveredAt = Date.now();
   }
-  await Order.save({ validateBeforeSave: false });
+  await order.save({ validateBeforeSave: false });
   res.status(200).json({
     success: true,
     order,
@@ -122,7 +122,7 @@ exports.updateOrderStatus = catchErrors(async (req, res, next) => {
 const updateStock = async (productId, qty) => {
   const product = await Product.findById(productId);
   product.Stock = product.Stock - qty;
-  await Product.save({
+  await product.save({
     validateBeforeSave: false,
   });
 };
