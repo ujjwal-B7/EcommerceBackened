@@ -4,6 +4,14 @@ const orderController = require("../controllers/orderController");
 const { authenticatedUser, authorizedRoles } = require("../middleware/auth");
 
 router.post("/order/new", authenticatedUser, orderController.createOrder);
+router.get("/order/:id", authenticatedUser, orderController.getSingleOrder);
+router.get(
+  "/orders/myOrders",
+  authenticatedUser,
+  orderController.getTotalOrdersByUser
+);
+
+// admin routes
 router
   .route("/admin/order/:id")
   .put(
@@ -21,12 +29,6 @@ router.get(
   authenticatedUser,
   authorizedRoles("admin"),
   orderController.getTotalOrdersByAdmin
-);
-router.get("/order/:id", authenticatedUser, orderController.getSingleOrder);
-router.get(
-  "/orders/myOrders",
-  authenticatedUser,
-  orderController.getTotalOrdersByUser
 );
 
 module.exports = router;

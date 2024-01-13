@@ -98,6 +98,10 @@ exports.getTotalOrdersByAdmin = catchErrors(async (req, res, next) => {
 // update order status by admin
 exports.updateOrderStatus = catchErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
+  if (!order) {
+    return next(new ErrorHandler("Order not found with this id", 404));
+  }
+
   if (order.orderStatus === "Delivered") {
     return next(
       new ErrorHandler("Your product has already been delivered", 404)
