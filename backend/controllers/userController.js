@@ -71,9 +71,10 @@ exports.forgotPassword = catchErrors(async (req, res, next) => {
   }
   const resetToken = user.getResetPasswordToken();
   await user.save({ validateBeforeSave: false });
-  const resetPasswordUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/resetPassword/${resetToken}`;
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;
+  // const resetPasswordUrl = `${req.protocol}://${req.get(
+  //   "host"
+  // )}/api/v1/resetPassword/${resetToken}`;
   const message = `Your password reset link is:\n ${resetPasswordUrl} \n If you have not requested this link please ignore it.`;
   try {
     await sendEmail({
@@ -113,12 +114,12 @@ exports.resetPassword = catchErrors(async (req, res, next) => {
     );
   }
 
-  if (req.body.password !== req.body.confirmPassword) {
+  if (req.body.newPassword !== req.body.confirmPassword) {
     return next(
-      new ErrorHandler("Password and confirm password doesnt match", 400)
+      new ErrorHandler("Password and confirm password did not match", 400)
     );
   }
-  user.password = req.body.password;
+  user.password = req.body.newPassword;
   user.resetPasswordToken = undefined;
   user.resetPasswordTokenExpire = undefined;
   await user.save();
@@ -142,15 +143,14 @@ exports.updatePassword = catchErrors(async (req, res, next) => {
   }
 
   if (req.body.newPassword !== req.body.confirmPassword) {
-    return next(new ErrorHandler("Password doesnt match", 400));
+    return next(new ErrorHandler("Both password should match", 400));
   }
   user.password = req.body.newPassword;
   await user.save();
   token(user, 200, res);
-  // res.status(200).json({
-  //   success: true,
-  //   user,
-  // });
+  res.status(200).json({
+    success: true,
+  });
 });
 
 // update user profile
