@@ -19,6 +19,8 @@ exports.registerUser = catchErrors(async (req, res, next) => {
     email,
     password,
     profile: {
+      // public_id: "public_id",
+      // url: "image.secure_url",
       public_id: image.public_id,
       url: image.secure_url,
     },
@@ -157,6 +159,20 @@ exports.updateProfile = catchErrors(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
   };
+  if (req.body.profile !== "") {
+    const user = await User.findById(req.user.id);
+    const imageId = user.profile.public_id;
+    await cloudinary.v2.uploader.destroy(imageId);
+    const image = await cloudinary.v2.uploader.upload(req.body.profile, {
+      folder: "profiles",
+      width: 150,
+      crop: "scale",
+    });
+    updatedUserData.profile = {
+      public_id: image.public_id,
+      url: image.secure_url,
+    };
+  }
   // image updating will be done later
   const user = await User.findByIdAndUpdate(req.user.id, updatedUserData, {
     new: true,
