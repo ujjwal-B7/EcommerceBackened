@@ -25,16 +25,18 @@ const userSchema = new Schema({
   profile: {
     public_id: {
       type: String,
-      required: true,
+      default: "public_id",
+      // required: true,
     },
     url: {
       type: String,
-      required: true,
+      default: "https://i.stack.imgur.com/l60Hf.png",
+      // required: true,
     },
   },
   createdAt: {
     type: Date,
-    default:Date.now()
+    default: Date.now(),
   },
   role: {
     type: String,

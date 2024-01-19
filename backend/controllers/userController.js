@@ -9,6 +9,7 @@ const cloudinary = require("cloudinary");
 // user register
 exports.registerUser = catchErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
+
   const image = await cloudinary.v2.uploader.upload(req.body.profile, {
     folder: "profiles",
     width: 150,
