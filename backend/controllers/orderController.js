@@ -14,7 +14,7 @@ exports.createOrder = catchErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-
+  console.log(shippingInfo);
   //   demo data
   //  {
   //   "itemsPrice":200,

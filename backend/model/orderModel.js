@@ -10,11 +10,11 @@ const orderSchema = new Schema({
       type: String,
       required: [true, "Please enter the city"],
     },
-    Province: {
+    state: {
       type: String,
       required: [true, "Please enter the province"],
     },
-    phoneNumber: {
+    phoneNo: {
       type: Number,
       required: [true, "Please enter the phone number"],
     },
