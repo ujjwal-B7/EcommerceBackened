@@ -4,6 +4,12 @@ const productController = require("../controllers/productController");
 const { authenticatedUser, authorizedRoles } = require("../middleware/auth");
 
 router.get("/products", productController.getAllProducts);
+router.get(
+  "/admin/products",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  productController.getAllProductsByAdmin
+);
 router.get("/products/:id", productController.getSingleProduct);
 router.post(
   "/admin/products/new",

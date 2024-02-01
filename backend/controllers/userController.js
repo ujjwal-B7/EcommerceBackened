@@ -26,6 +26,7 @@ exports.registerUser = catchErrors(async (req, res, next) => {
       url: image.secure_url,
     },
   });
+  console.log(user);
   token(user, 201, res);
   // const token = user.getJwtToken();
   // res.status(201).json({ success: true, token });
@@ -47,6 +48,7 @@ exports.loginUser = catchErrors(async (req, res, next) => {
   if (!matchPassword) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
+  console.log(user);
   token(user, 200, res);
   // const token = user.getJwtToken();
   // res.status(200).json({ success: true, user, token });

@@ -2,10 +2,27 @@ const catchErrors = require("../middleware/catchErrors");
 const Product = require("../model/productModel");
 const ApiFeatures = require("../utils/apiFeatures");
 const ErrorHandler = require("../utils/errorHandler");
-
+const cloudinary = require("cloudinary");
 // Admin Route..create product
 exports.createProduct = catchErrors(async (req, res, next) => {
   // try {
+  let images = [];
+  if (typeof req.body.images === "string") {
+    images.push(req.body.images);
+  } else {
+    images = req.body.images;
+  }
+  const imagesLink = [];
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products",
+    });
+    imagesLink.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+  req.body.images = imagesLink;
   req.body.user = req.user.id;
   const product = await Product.create(req.body);
   res.status(201).json({ success: true, product });
@@ -16,7 +33,7 @@ exports.createProduct = catchErrors(async (req, res, next) => {
 
 // getting all the products
 exports.getAllProducts = catchErrors(async (req, res) => {
-  const productPerPage = 9;
+  const productPerPage = 20;
   const productsCount = await Product.countDocuments();
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
@@ -29,6 +46,15 @@ exports.getAllProducts = catchErrors(async (req, res) => {
     products,
     productsCount,
     productPerPage,
+  });
+});
+
+// getting all the products by adin
+exports.getAllProductsByAdmin = catchErrors(async (req, res) => {
+  const products = await Product.find();
+  res.status(200).json({
+    success: true,
+    products,
   });
 });
 
