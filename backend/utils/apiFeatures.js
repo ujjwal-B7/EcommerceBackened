@@ -39,10 +39,10 @@ class ApiFeatures {
   // pagination func
   pagination(productPerPage) {
     const currentPage = Number(this.queryStr.page) || 1;
-
     const skipProduct = productPerPage * (currentPage - 1);
     this.query = this.query.limit(productPerPage).skip(skipProduct);
     return this;
   }
 }
+
 module.exports = ApiFeatures;

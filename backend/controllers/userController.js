@@ -10,21 +10,21 @@ const cloudinary = require("cloudinary");
 exports.registerUser = catchErrors(async (req, res, next) => {
   const { name, email, password } = req.body;
 
-  const image = await cloudinary.v2.uploader.upload(req.body.profile, {
-    folder: "profiles",
-    width: 150,
-    crop: "scale",
-  });
+  // const image = await cloudinary.v2.uploader.upload(req.body.profile, {
+  //   folder: "profiles",
+  //   width: 150,
+  //   crop: "scale",
+  // });
   const user = await User.create({
     name,
     email,
     password,
-    profile: {
-      // public_id: "public_id",
-      // url: "image.secure_url",
-      public_id: image.public_id,
-      url: image.secure_url,
-    },
+    // profile: {
+    //   // public_id: "public_id",
+    //   // url: "image.secure_url",
+    //   public_id: image.public_id,
+    //   url: image.secure_url,
+    // },
   });
   console.log(user);
   token(user, 201, res);

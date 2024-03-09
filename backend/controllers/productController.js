@@ -49,7 +49,7 @@ exports.getAllProducts = catchErrors(async (req, res) => {
   });
 });
 
-// getting all the products by adin
+// getting all the products by admin
 exports.getAllProductsByAdmin = catchErrors(async (req, res) => {
   const products = await Product.find();
   res.status(200).json({
@@ -70,6 +70,23 @@ exports.getSingleProduct = catchErrors(async (req, res, next) => {
 
 // Admin route...updating the existing products
 exports.updateProduct = catchErrors(async (req, res, next) => {
+  let images = [];
+  if (typeof req.body.images === "string") {
+    images.push(req.body.images);
+  } else {
+    images = req.body.images;
+  }
+  const imagesLink = [];
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products",
+    });
+    imagesLink.push({
+      public_id: result.public_id,
+      url: result.secure_url,
+    });
+  }
+  req.body.images = imagesLink;
   let product = await Product.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -81,6 +98,12 @@ exports.updateProduct = catchErrors(async (req, res, next) => {
 // Admin route..deleting the existing product
 exports.deleteProduct = catchErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
+
+  // deleting images
+  for (let i = 0; i < product.images.length; i++) {
+    await cloudinary.v2.uploader.destroy(product.images[i].public_id);
+  }
+
   await product.deleteOne();
   res.status(200).json({
     success: true,

@@ -3,7 +3,8 @@ const Product = require("../model/productModel");
 const User = require("../model/userModel");
 const catchErrors = require("../middleware/catchErrors");
 const ErrorHandler = require("../utils/errorHandler");
-
+const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 // creating a new product order
 exports.createOrder = catchErrors(async (req, res, next) => {
   const {
@@ -39,7 +40,6 @@ exports.createOrder = catchErrors(async (req, res, next) => {
   //   "status":"succceded"
   // }
   // }
-
   const order = await Order.create({
     shippingInfo,
     orderItems,
@@ -50,6 +50,10 @@ exports.createOrder = catchErrors(async (req, res, next) => {
     paidAt: Date.now(),
     user: req.user._id,
   });
+  order.orderItems.forEach(async (order) => {
+    await updateStock(order.product, order.quantity);
+  });
+  await order.save({ validateBeforeSave: false });
   res.status(201).json({
     success: true,
     message: "Order placed successfully.",
@@ -88,6 +92,7 @@ exports.getTotalOrdersByAdmin = catchErrors(async (req, res, next) => {
   for (const item of orders) {
     totalAmount += item.totalPrice;
   }
+  console.log(totalAmount);
   res.status(200).json({
     success: true,
     totalAmount,
@@ -97,20 +102,23 @@ exports.getTotalOrdersByAdmin = catchErrors(async (req, res, next) => {
 
 // update order status by admin
 exports.updateOrderStatus = catchErrors(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
+  const { _id, orderStatus } = req.body;
+  console.log("**************", _id);
+  console.log(orderStatus);
+  const order = await Order.findById(_id);
+  console.log("order", order);
   if (!order) {
     return next(new ErrorHandler("Order not found with this id", 404));
   }
-
   if (order.orderStatus === "Delivered") {
     return next(
       new ErrorHandler("Your product has already been delivered", 404)
     );
   }
 
-  order.orderItems.forEach(async (order) => {
-    await updateStock(order.product, order.quantity);
-  });
+  // order.orderItems.forEach(async (order) => {
+  //   await updateStock(order.product, order.quantity);
+  // });
   order.orderStatus = req.body.orderStatus;
   if (req.body.orderStatus === "Delivered") {
     order.deliveredAt = Date.now();

@@ -14,16 +14,17 @@ router.get(
 // admin routes
 router
   .route("/admin/order/:id")
-  .put(
-    authenticatedUser,
-    authorizedRoles("admin"),
-    orderController.updateOrderStatus
-  )
   .delete(
     authenticatedUser,
     authorizedRoles("admin"),
     orderController.deleteOrder
   );
+router.put(
+  "/admin/order/update",
+  authenticatedUser,
+  authorizedRoles("admin"),
+  orderController.updateOrderStatus
+);
 router.get(
   "/admin/order/total",
   authenticatedUser,
