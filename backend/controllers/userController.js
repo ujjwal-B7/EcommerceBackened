@@ -137,6 +137,7 @@ exports.getUserDetail = catchErrors(async (req, res, next) => {
     user,
   });
 });
+
 // update user password
 exports.updatePassword = catchErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");

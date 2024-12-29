@@ -15,7 +15,7 @@ exports.createOrder = catchErrors(async (req, res, next) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-  console.log(shippingInfo);
+  console.log("reached", orderItems);
   //   demo data
   //  {
   //   "itemsPrice":200,
@@ -79,6 +79,9 @@ exports.getSingleOrder = catchErrors(async (req, res, next) => {
 // get my orders by the user to see their order history
 exports.getTotalOrdersByUser = catchErrors(async (req, res, next) => {
   const myOrders = await Order.find({ user: req.user.id });
+
+  console.log("orders", myOrders);
+
   res.status(200).json({
     success: true,
     myOrders,

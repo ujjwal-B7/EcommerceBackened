@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backendContainer
+    environment:
+      - PORT=6000
+      - DB_URI=mongodb://admin:password@mongodb
+    ports:
+      - 6000:6000
+    depends_on:
+      - mongodb
+    networks:
+      - ecommerce-network
+    develop:
+      watch:
+        - path: package*.json
+          action: rebuild
+        - path: .
+          target: /backend
+          action: sync
+          ignore:
+            - node_modules/
+  mongodb:
+    image: mongo
+    container_name: ecommerceMongoContainer
+    ports:
+      - 27025:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - ecommerce-network
+    volumes:
+      - ecommercedatabase:/data/db
+volumes:
+  ecommercedatabase:
+    driver: local
+networks:
+  ecommerce-network:
+    external: true
